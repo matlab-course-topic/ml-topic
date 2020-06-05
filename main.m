@@ -73,7 +73,7 @@ function main
     end
           
     function startGameFn(~, ~)
-        example2
+        level1
     end
     
     function closeWindowFn(~, ~)
