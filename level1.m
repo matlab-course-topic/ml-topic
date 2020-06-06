@@ -105,6 +105,7 @@ end
     field=generatefieldarray(deffield,snakePos,foodpos);
     drawfield(field)
     startgamefcn();
+    
     function field=generatefieldarray(deffield,snakePos,foodpos)
         field=deffield{arenaindex};
         for count=1:length(snakePos)
@@ -286,8 +287,8 @@ end
                (field(nextmovepos1(1),nextmovepos1(2))==3)||...
                (field(nextmovepos1(1),nextmovepos1(2))==9)
                 playstat=0;
+                failed
                 break
-                transition1
             end
             
             %Moving snake forward
@@ -302,7 +303,8 @@ end
             field=generatefieldarray(deffield,snakePos,foodpos);
             drawfield(field)
             %Performing delay
-            set(scoreText,'String',num2str(snakeScore))
+%             set(scoreText,'String',num2str(snakeScore))
+            % Finish the game, go to next level
             if snakeScore<=0
                 playstat=0;
                 transition1
