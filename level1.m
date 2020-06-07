@@ -305,6 +305,7 @@ end
             %Performing delay
 %             set(scoreText,'String',num2str(snakeScore))
             % Finish the game, go to next level
+            set(scoreText,'String',num2str(snakeScore))
             if snakeScore<=0
                 playstat=0;
                 transition1
