@@ -22,20 +22,31 @@ function level3
     clear all
 %Declaring global variables
     playstat=0;
-    pausestat=0;
-    quitstat=0;
     field=zeros(50);
     arenaindex=1;
+    
     snakepos1=zeros(15,2);
     snakepos2=zeros(15,2);
+    snakepos3=zeros(15,2);
+    
     snakevel=1;
+    
     snakedir1='right';
     truedir1='right';
+    
     snakedir2='right';
     truedir2='right';
+    
+    snakedir3='right';
+    truedir3='right';
+    
     snakescore1=0;
     snakescore2=0;
     foodpos=zeros(3,2);
+    
+    snake2stat = 1;
+    snake3stat = 1;
+    
 %Defining variables for deffield
     deffield=cell(1,3);
     deffield{1}=zeros(50);
@@ -147,76 +158,48 @@ end
                          'BackgroundColor',[0.2,0.6,1],...
                          'Units','pixels',...
                          'Position',[430,580,85,51]);
-        
-% win1=uicontrol('Parent',mainwindow,...
-%                         'Style','text',...
-%                         'String','綠色蛇蛇~獲勝！！',...
-%                         'FontSize',50,...
-%                         'FontName','微軟正黑體',...
-%                         'Visible','off',...
-%                         'FontWeight','bold',...
-%                         'HorizontalAlignment','center',...
-%                         'BackgroundColor',[0.6 1 0.6],...
-%                         'ForegroundColor',[0,0.5,0],...
-%                         'Units','pixels',...
-%                         'Position',[125,200,350,180]);
-% win2=uicontrol('Parent',mainwindow,...
-%                         'Style','text',...
-%                         'String','藍色蛇蛇~獲勝！！',...
-%                         'FontSize',50,...
-%                         'FontName','微軟正黑體',...
-%                         'Visible','off',...
-%                         'FontWeight','bold',...
-%                         'HorizontalAlignment','center',...
-%                         'BackgroundColor',[0.729 0.831 0.957],...
-%                         'ForegroundColor',[0,0,1],...
-%                         'Units','pixels',...
-%                         'Position',[125,200,350,180]);
-% tie=uicontrol('Parent',mainwindow,...
-%                         'Style','text',...
-%                         'String','平手！',...
-%                         'FontSize',50,...
-%                         'FontName','微軟正黑體',...
-%                         'Visible','off',...
-%                         'FontWeight','bold',...
-%                         'HorizontalAlignment','center',...
-%                         'BackgroundColor',[0.855 0.702 1],...
-%                         'ForegroundColor',[0.847,0.161,0],...
-%                         'Units','pixels',...
-%                         'Position',[170,275,222,93]);
-
 %Inititiating graphics
-    field=generatefieldarray(deffield,snakepos1,snakepos2,foodpos);
+    field=generatefieldarray(deffield,snakepos1,snakepos2,snakepos3,foodpos);
     drawfield(field)
     startgamefcn();
 
 %Declaring LocalFunction
     %Start of generatefieldarray
-    function field=generatefieldarray(deffield,snakepos1,snakepos2,foodpos)
+    %%%%% field == 9 --> wall
+    function field=generatefieldarray(deffield,snakepos1,snakepos2,snakepos3,foodpos)
         field=deffield{arenaindex};
         for count=1:length(snakepos1)
             if ~((snakepos1(count,1)==0)||(snakepos1(count,2)==0))
-                field(snakepos1(count,1),snakepos1(count,2))=1;
+                field(snakepos1(count,1),snakepos1(count,2))=1; % snake1 body
                 if count==1
-                    field(snakepos1(1,1),snakepos1(1,2))=2;
+                    field(snakepos1(1,1),snakepos1(1,2))=2; % snake1 head
                 end
             end
         end
         for count=1:length(snakepos2)
             if ~((snakepos2(count,1)==0)||(snakepos2(count,2)==0))
-                field(snakepos2(count,1),snakepos2(count,2))=3;
-                if count==1
-                    field(snakepos2(1,1),snakepos2(1,2))=4;
+                field(snakepos2(count,1),snakepos2(count,2))=3; % snake2 body
+                if count==1 
+                    field(snakepos2(1,1),snakepos2(1,2))=4; % snake2 head
+                end
+            end
+        end
+        for count=1:length(snakepos3)
+            if ~((snakepos3(count,1)==0)||(snakepos3(count,2)==0))
+                field(snakepos3(count,1),snakepos3(count,2))=10; % snake3 body
+                if count==1 
+                    field(snakepos3(1,1),snakepos3(1,2))=11; % snake3 head
                 end
             end
         end
         for count=1:length(foodpos)
             if ~((foodpos(count,1)==0)||(foodpos(count,2)==0))
-                field(foodpos(count,1),foodpos(count,2))=5;
+                field(foodpos(count,1),foodpos(count,2))=5; % food
             end
         end
     end
     %End of generatefieldarray
+    
     %Start of drawfield
     function drawfield(field)
         %Preparing array for field graphic
@@ -233,6 +216,7 @@ end
                 graphics(((row-1)*10)+1:((row-1)*10)+10,...
                          ((col-1)*10)+1:((col-1)*10)+10,3)=0;
             end
+            %%% Draw snake1
             %Drawing snake  GREEN
             if field(row,col)==1
                 graphics(((row-1)*10)+1:((row-1)*10)+10,...
@@ -251,6 +235,9 @@ end
                 graphics(((row-1)*10)+1:((row-1)*10)+10,...
                          ((col-1)*10)+1:((col-1)*10)+10,3)=0;
             end
+            %%% End Draw snake1
+            
+            %%%  Draw snake2
             %Drawing snake 2 BLUE
             if field(row,col)==3
                 graphics(((row-1)*10)+1:((row-1)*10)+10,...
@@ -269,6 +256,29 @@ end
                 graphics(((row-1)*10)+1:((row-1)*10)+10,...
                          ((col-1)*10)+1:((col-1)*10)+10,3)=255;
             end
+            %%% End Draw snake2
+            
+            %%%  Draw snake3
+            %Drawing snake 2 RED
+            if field(row,col)==10
+                graphics(((row-1)*10)+1:((row-1)*10)+10,...
+                         ((col-1)*10)+1:((col-1)*10)+10,1)=233;
+                graphics(((row-1)*10)+1:((row-1)*10)+10,...
+                         ((col-1)*10)+1:((col-1)*10)+10,2)=101;
+                graphics(((row-1)*10)+1:((row-1)*10)+10,...
+                         ((col-1)*10)+1:((col-1)*10)+10,3)=101;
+            end
+            %Drawing snake's head 2 RED
+            if field(row,col)==11
+                graphics(((row-1)*10)+1:((row-1)*10)+10,...
+                         ((col-1)*10)+1:((col-1)*10)+10,1)=255;
+                graphics(((row-1)*10)+1:((row-1)*10)+10,...
+                         ((col-1)*10)+1:((col-1)*10)+10,2)=0;
+                graphics(((row-1)*10)+1:((row-1)*10)+10,...
+                         ((col-1)*10)+1:((col-1)*10)+10,3)=0;
+            end
+            %%% End Draw snake3
+            
             %Drawing food
             if field(row,col)==5
                 graphics(((row-1)*10)+1:((row-1)*10)+10,...
@@ -329,17 +339,24 @@ end
 
         %Resetting variables
         playstat=1;
+        
         snakepos1=zeros(15,2);
         snakepos1(:,1)=21;
         snakepos1(:,2)=22:-1:8;
+        
         snakepos2=zeros(15,2);
         snakepos2(:,1)=30;
         snakepos2(:,2)=22:-1:8;
+        
+        snakepos3=zeros(15,2);
+        snakepos3(:,1)=39;
+        snakepos3(:,2)=22:-1:8;
+        
         snakedir1='right';
         snakescore1=0;
         snakescore2=0;
         %Initiating graphics
-        field=generatefieldarray(deffield,snakepos1,snakepos2,foodpos);
+        field=generatefieldarray(deffield,snakepos1,snakepos2,snakepos3,foodpos);
         drawfield(field)
         %Placing initial food
         count=1;
@@ -358,11 +375,12 @@ end
         % auto end
         
         %Redrawing graphics
-        field=generatefieldarray(deffield,snakepos1,snakepos2,foodpos);
+        field=generatefieldarray(deffield,snakepos1,snakepos2,snakepos3,foodpos);
         drawfield(field)
+        
         %Performing loop for the game
         while playstat==1
-            % auto start
+            % auto start snake2
             min_distance = min([dts(foodpos(1, 1), foodpos(1, 2)) dts(foodpos(2, 1), foodpos(2, 2)) dts(foodpos(3, 1), foodpos(3, 2))]);
             min_pos = [];
             if min_distance == dts(foodpos(1, 1), foodpos(1, 2))
@@ -392,7 +410,28 @@ end
                     snakedir2='left';
                 end
             end
-            % auto end
+            % auto end snake2
+            
+            % auto start snake3
+            next = round(4*rand);
+            if next == 0
+                if ~strcmpi(truedir3,'up')
+                    snakedir3='down';
+                end
+            elseif next == 1
+                if ~strcmpi(truedir3,'down')
+                    snakedir3='up';
+                end
+            elseif next == 2
+                if ~strcmpi(truedir3,'left')
+                    snakedir3='right';
+                end
+            elseif next == 3
+                if ~strcmpi(truedir3,'right')
+                    snakedir3='left';
+                end
+            end
+            % auto end snake3
             
             %Creating loop for game pause
 
@@ -425,32 +464,62 @@ end
             end
             
             %%%%%%%%%  SNAKE 2  %%%%%%%%%
-            
-            if strcmpi(snakedir2,'left')
-                nextmovepos2=[snakepos2(1,1),snakepos2(1,2)-1];
-                truedir2='left';
-                if nextmovepos2(2)==0
-                    nextmovepos2(2)=50;
-                end
-            elseif strcmpi(snakedir2,'right')
-                nextmovepos2=[snakepos2(1,1),snakepos2(1,2)+1];
-                truedir2='right';
-                if nextmovepos2(2)==51
-                    nextmovepos2(2)=1;
-                end
-            elseif strcmpi(snakedir2,'up')
-                nextmovepos2=[snakepos2(1,1)-1,snakepos2(1,2)];
-                truedir2='up';
-                if nextmovepos2(1)==0
-                    nextmovepos2(1)=50;
-                end
-            elseif strcmpi(snakedir2,'down')
-                nextmovepos2=[snakepos2(1,1)+1,snakepos2(1,2)];
-                truedir2='down';
-                if nextmovepos2(1)==51
-                    nextmovepos2(1)=1;
+            if snake2stat == 1
+                if strcmpi(snakedir2,'left')
+                    nextmovepos2=[snakepos2(1,1),snakepos2(1,2)-1];
+                    truedir2='left';
+                    if nextmovepos2(2)==0
+                        nextmovepos2(2)=50;
+                    end
+                elseif strcmpi(snakedir2,'right')
+                    nextmovepos2=[snakepos2(1,1),snakepos2(1,2)+1];
+                    truedir2='right';
+                    if nextmovepos2(2)==51
+                        nextmovepos2(2)=1;
+                    end
+                elseif strcmpi(snakedir2,'up')
+                    nextmovepos2=[snakepos2(1,1)-1,snakepos2(1,2)];
+                    truedir2='up';
+                    if nextmovepos2(1)==0
+                        nextmovepos2(1)=50;
+                    end
+                elseif strcmpi(snakedir2,'down')
+                    nextmovepos2=[snakepos2(1,1)+1,snakepos2(1,2)];
+                    truedir2='down';
+                    if nextmovepos2(1)==51
+                        nextmovepos2(1)=1;
+                    end
                 end
             end
+             %%%%%%%%%  SNAKE 3  %%%%%%%%%
+            if snake3stat == 1
+                if strcmpi(snakedir3,'left')
+                    nextmovepos3=[snakepos3(1,1),snakepos3(1,2)-1];
+                    truedir3='left';
+                    if nextmovepos3(2)==0
+                        nextmovepos3(2)=50;
+                    end
+                elseif strcmpi(snakedir3,'right')
+                    nextmovepos3=[snakepos3(1,1),snakepos3(1,2)+1];
+                    truedir3='right';
+                    if nextmovepos3(2)==51
+                        nextmovepos3(2)=1;
+                    end
+                elseif strcmpi(snakedir3,'up')
+                    nextmovepos3=[snakepos3(1,1)-1,snakepos3(1,2)];
+                    truedir3='up';
+                    if nextmovepos3(1)==0
+                        nextmovepos3(1)=50;
+                    end
+                elseif strcmpi(snakedir3,'down')
+                    nextmovepos3=[snakepos3(1,1)+1,snakepos3(1,2)];
+                    truedir3='down';
+                    if nextmovepos3(1)==51
+                        nextmovepos3(1)=1;
+                    end
+                end
+            end
+            
             %Checking snake's forward movement position for food
             %%%%%%snake1
             if field(nextmovepos1(1),nextmovepos1(2))==5
@@ -495,54 +564,105 @@ end
                 end
             else
                 growstat2=0;
-            end
+            end  
+            %%%%%snake 3
+            if field(nextmovepos3(1),nextmovepos3(2))==5
+                growstat3=1;
+                %Deleting eaten food
+                for count=1:3
+                    if isequal(nextmovepos3,foodpos(count,:))
+                        foodpos(count,:)=[];
+                        break
+                    end
+                end
+                %Adding new food
+                addstat=1;
+                while addstat==1
+                    foodpos(3,1)=1+round(49*rand);
+                    foodpos(3,2)=1+round(49*rand);
+                    if field(foodpos(3,1),foodpos(3,2))==0
+                        addstat=0;
+                    end
+                end
+            else
+                growstat3=0;
+            end  
             
             %Checking snake's forward movement for wall -- snake
             %bump into yourself, and others
             if (field(nextmovepos1(1),nextmovepos1(2))==1)||...
+               (field(nextmovepos1(1),nextmovepos1(2))==2)||...     
                (field(nextmovepos1(1),nextmovepos1(2))==3)||...
+               (field(nextmovepos1(1),nextmovepos1(2))==4)||...
+               (field(nextmovepos1(1),nextmovepos1(2))==10)||...
+               (field(nextmovepos1(1),nextmovepos1(2))==11)||...
                (field(nextmovepos1(1),nextmovepos1(2))==9)
-                disp("1");
-                playstat=0;
-                failed
-                break
-            %tie
-            elseif field(nextmovepos1(1),nextmovepos1(2))==4
-                disp("2");
                 playstat=0;
                 failed
                 break
             end     
-            %computer bumps player
+            %computer snake2 bumps player
             if (field(nextmovepos2(1),nextmovepos2(2))==1)||...
+               (field(nextmovepos2(1),nextmovepos2(2))==2)||...
                (field(nextmovepos2(1),nextmovepos2(2))==3)||...
+               (field(nextmovepos2(1),nextmovepos2(2))==4)||...
+               (field(nextmovepos2(1),nextmovepos2(2))==10)||...
+               (field(nextmovepos2(1),nextmovepos2(2))==11)||...
                (field(nextmovepos2(1),nextmovepos2(2))==9)
-                transition2
-                playstat=0;
-                break
+                  snake2stat = 0;    % no grow
+                  snakepos2 = zeros(15,2);
+            end
+            %computer snake3 bumps player
+            if (field(nextmovepos3(1),nextmovepos3(2))==1)||...
+               (field(nextmovepos3(1),nextmovepos3(2))==2)||...
+               (field(nextmovepos3(1),nextmovepos3(2))==3)||...
+               (field(nextmovepos3(1),nextmovepos3(2))==4)||...
+               (field(nextmovepos3(1),nextmovepos3(2))==10)||...
+               (field(nextmovepos3(1),nextmovepos3(2))==11)||...
+               (field(nextmovepos3(1),nextmovepos3(2))==9)
+                  snake3stat = 0;    % no grow
+                  snakepos3 = zeros(15,2);
             end
             % End Checking snake
             
             %Moving snake forward
+            %%% snake1
             if growstat1==1
                 snakepos1=[nextmovepos1;snakepos1(1:length(snakepos1),:)];
                 snakescore1=snakescore1+1;
             else
                 snakepos1=[nextmovepos1;snakepos1(1:length(snakepos1)-1,:)];
             end
+            %%% snake2
             if growstat2==1
                 snakepos2=[nextmovepos2;snakepos2(1:length(snakepos2),:)];
                 snakescore2=snakescore2+1;
+            elseif growstat2 == 3
+                snakepos2=zeros(15,2);
             else
                 snakepos2=[nextmovepos2;snakepos2(1:length(snakepos2)-1,:)];
-
             end
+            %%% snake3
+            if growstat3==1
+                snakepos3=[nextmovepos3;snakepos3(1:length(snakepos3),:)];
+                snakescore2=snakescore2+1;
+            elseif growstat3 == 3
+                snakepos3=zeros(15,2);
+            else
+                snakepos3=[nextmovepos3;snakepos3(1:length(snakepos3)-1,:)];
+            end
+            
             %Updating graphics
-            field=generatefieldarray(deffield,snakepos1,snakepos2,foodpos);
+            field=generatefieldarray(deffield,snakepos1,snakepos2,snakepos3,foodpos);
             drawfield(field)
             %Performing delay
             set(lscoretext,'String',num2str(snakescore1))
             set(rscoretext,'String',num2str(snakescore2))
+            % if no remain snake
+
+            if snake2stat == 0 && snake3stat == 0
+               transition2 
+            end
             % player win
             if snakescore1>=20
                 playstat=0;
@@ -562,7 +682,6 @@ end
     function closegamefcn(~,~)
         %Stopping game loop
         playstat=0;
-        quitstat=1;
         pause(0.5)
         %Closing all windows
         delete(mainwindow)
