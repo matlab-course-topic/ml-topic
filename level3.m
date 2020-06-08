@@ -662,22 +662,10 @@ end
             %Updating graphics
             field=generatefieldarray(deffield,snakepos1,snakepos2,snakepos3,foodpos);
             drawfield(field)
-            %Performing delay
-            set(lscoretext,'String',num2str(snakescore1))
-            set(rscoretext,'String',num2str(snakescore2))
-            % if no remain snake
 
+            % If no remain snake
             if snake2stat == 0 && snake3stat == 0
                transition2 
-            end
-            % player win
-            if snakescore1>=100000
-                playstat=0;
-                transition2
-            % computer win
-            elseif snakescore2>=100000
-                playstat=0;
-                failed
             end
             pause(0.11-snakevel*0.01)
         end
