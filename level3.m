@@ -147,6 +147,7 @@ end
                          'FontWeight','bold',...
                          'HorizontalAlignment','center',...
                          'BackgroundColor',[0,0.8,0.2],...
+                         'Visible', false,...
                          'Units','pixels',...
                          'Position',[339,580,85,51]);
     rscoretext=uicontrol('Parent',mainwindow,...
@@ -156,6 +157,7 @@ end
                          'FontWeight','bold',...
                          'HorizontalAlignment','center',...
                          'BackgroundColor',[0.2,0.6,1],...
+                         'Visible', false,...
                          'Units','pixels',...
                          'Position',[430,580,85,51]);
 %Inititiating graphics
@@ -284,9 +286,9 @@ end
                 graphics(((row-1)*10)+1:((row-1)*10)+10,...
                          ((col-1)*10)+1:((col-1)*10)+10,1)=255;
                 graphics(((row-1)*10)+1:((row-1)*10)+10,...
-                         ((col-1)*10)+1:((col-1)*10)+10,2)=0;
+                         ((col-1)*10)+1:((col-1)*10)+10,2)=255;
                 graphics(((row-1)*10)+1:((row-1)*10)+10,...
-                         ((col-1)*10)+1:((col-1)*10)+10,3)=0;
+                         ((col-1)*10)+1:((col-1)*10)+10,3)=102;
             end
             %Drawing ground
             if field(row,col)==0
@@ -441,28 +443,7 @@ end
                 end
             end
             % auto end snake2
-            
-%             % auto start snake3
-%             next = round(4*rand);
-%             if next == 0
-%                 if ~strcmpi(truedir3,'up')
-%                     snakedir3='down';
-%                 end
-%             elseif next == 1
-%                 if ~strcmpi(truedir3,'down')
-%                     snakedir3='up';
-%                 end
-%             elseif next == 2
-%                 if ~strcmpi(truedir3,'left')
-%                     snakedir3='right';
-%                 end
-%             elseif next == 3
-%                 if ~strcmpi(truedir3,'right')
-%                     snakedir3='left';
-%                 end
-%             end
-%             % auto end snake3
-            
+          
             %Creating loop for game pause
 
             %Calculating snake's forward movement
@@ -690,11 +671,11 @@ end
                transition2 
             end
             % player win
-            if snakescore1>=20
+            if snakescore1>=100000
                 playstat=0;
                 transition2
             % computer win
-            elseif snakescore2>=20
+            elseif snakescore2>=100000
                 playstat=0;
                 failed
             end
