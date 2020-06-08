@@ -383,12 +383,22 @@ end
             % auto start snake2
             min_distance = min([dts(foodpos(1, 1), foodpos(1, 2)) dts(foodpos(2, 1), foodpos(2, 2)) dts(foodpos(3, 1), foodpos(3, 2))]);
             min_pos = [];
+            max_distance = max([dts(foodpos(1, 1), foodpos(1, 2)) dts(foodpos(2, 1), foodpos(2, 2)) dts(foodpos(3, 1), foodpos(3, 2))]);
+            max_pos = [];
             if min_distance == dts(foodpos(1, 1), foodpos(1, 2))
                 min_pos = foodpos(1,:);
             elseif min_distance == dts(foodpos(2, 1), foodpos(2, 2))
                 min_pos = foodpos(2,:);
             elseif min_distance == dts(foodpos(3, 1), foodpos(3, 2))
                 min_pos = foodpos(3,:);
+            end
+            
+            if max_distance == dts(foodpos(1, 1), foodpos(1, 2))
+                max_pos = foodpos(1,:);
+            elseif max_distance == dts(foodpos(2, 1), foodpos(2, 2))
+                max_pos = foodpos(2,:);
+            elseif max_distance == dts(foodpos(3, 1), foodpos(3, 2))
+                max_pos = foodpos(3,:);
             end
 
             if(min_pos(1) > snakepos2(1,1))
@@ -410,28 +420,48 @@ end
                     snakedir2='left';
                 end
             end
-            % auto end snake2
-            
-            % auto start snake3
-            next = round(4*rand);
-            if next == 0
+            %%%%%%%%
+            if(max_pos(1) > snakepos3(1,1))
                 if ~strcmpi(truedir3,'up')
                     snakedir3='down';
                 end
-            elseif next == 1
+            elseif(max_pos(1) < snakepos3(1,1))
                 if ~strcmpi(truedir3,'down')
                     snakedir3='up';
                 end
-            elseif next == 2
+            end
+
+            if(max_pos(2) > snakepos3(1,2))
                 if ~strcmpi(truedir3,'left')
                     snakedir3='right';
                 end
-            elseif next == 3
+            elseif(max_pos(2) < snakepos3(1,2))
                 if ~strcmpi(truedir3,'right')
                     snakedir3='left';
                 end
             end
-            % auto end snake3
+            % auto end snake2
+            
+%             % auto start snake3
+%             next = round(4*rand);
+%             if next == 0
+%                 if ~strcmpi(truedir3,'up')
+%                     snakedir3='down';
+%                 end
+%             elseif next == 1
+%                 if ~strcmpi(truedir3,'down')
+%                     snakedir3='up';
+%                 end
+%             elseif next == 2
+%                 if ~strcmpi(truedir3,'left')
+%                     snakedir3='right';
+%                 end
+%             elseif next == 3
+%                 if ~strcmpi(truedir3,'right')
+%                     snakedir3='left';
+%                 end
+%             end
+%             % auto end snake3
             
             %Creating loop for game pause
 
@@ -604,8 +634,6 @@ end
             %computer snake2 bumps player
             if (field(nextmovepos2(1),nextmovepos2(2))==1)||...
                (field(nextmovepos2(1),nextmovepos2(2))==2)||...
-               (field(nextmovepos2(1),nextmovepos2(2))==3)||...
-               (field(nextmovepos2(1),nextmovepos2(2))==4)||...
                (field(nextmovepos2(1),nextmovepos2(2))==10)||...
                (field(nextmovepos2(1),nextmovepos2(2))==11)||...
                (field(nextmovepos2(1),nextmovepos2(2))==9)
@@ -617,8 +645,6 @@ end
                (field(nextmovepos3(1),nextmovepos3(2))==2)||...
                (field(nextmovepos3(1),nextmovepos3(2))==3)||...
                (field(nextmovepos3(1),nextmovepos3(2))==4)||...
-               (field(nextmovepos3(1),nextmovepos3(2))==10)||...
-               (field(nextmovepos3(1),nextmovepos3(2))==11)||...
                (field(nextmovepos3(1),nextmovepos3(2))==9)
                   snake3stat = 0;    % no grow
                   snakepos3 = zeros(15,2);
