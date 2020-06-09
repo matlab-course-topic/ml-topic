@@ -665,7 +665,7 @@ end
 
             % If no remain snake
             if snake2stat == 0 && snake3stat == 0
-               transition2 
+               win 
             end
             pause(0.11-snakevel*0.01)
         end

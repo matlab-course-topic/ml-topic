@@ -541,13 +541,9 @@ end
             set(lscoretext,'String',num2str(snakescore1))
             set(rscoretext,'String',num2str(snakescore2))
             % player win
-            if snakescore1>=20
+            if snakescore1>=10
                 playstat=0;
                 transition2
-            % computer win
-            elseif snakescore2>=20
-                playstat=0;
-                failed
             end
             pause(0.11-snakevel*0.01)
         end
