@@ -67,7 +67,7 @@ function transition1
     end
           
     function startGameFn(~, ~)
-        example
+        level2
     end
     
     function closeWindowFn(~, ~)
